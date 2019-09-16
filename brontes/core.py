@@ -1,11 +1,11 @@
-"""Thunder training utilities."""
+"""Brontes training utilities."""
 import torch
 import pytorch_lightning as pl
 
 
-class Thunder(pl.LightningModule):
+class Brontes(pl.LightningModule):
     """
-    Thunder is a class to facilitate the write-up and reduce
+    Brontes is a class to facilitate the write-up and reduce
     boilerplate code in training scripts.
     """
 
@@ -28,7 +28,7 @@ class Thunder(pl.LightningModule):
             batch_fn (function): a function to preprocess the batch.
                 Defaults to None, the identity.
         """
-        super(Thunder, self).__init__()
+        super(Brontes, self).__init__()
         self.model = model
         self.loss = loss
         self.data_loaders = data_loaders

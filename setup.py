@@ -14,15 +14,16 @@ if os.path.exists('requirements.txt'):
         REQUIREMENTS = [line.strip() for line in fp]
 
 setup(
-    name='thunder',
+    name='brontes',
     version='0.0.1',
-    description='Thunder a package for easy training of pytorch models.',
+    description=
+    'Brontes is your helping cyclops for your pytorch models training.',
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
     author='Joris Cadow, Antonio Foncubierta Rodriguez, Matteo Manica',
     author_email=
     'joriscadow@gmail.com, antonio.foncubierta@gmail.com, drugilsberg@gmail.com',
-    url='https://github.com/afoncubierta/thunder',
+    url='https://github.com/afoncubierta/brontes',
     license='MIT',
     install_requires=REQUIREMENTS,
     classifiers=[

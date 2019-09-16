@@ -8,7 +8,7 @@ import torchvision.datasets as datasets
 import torchvision.models as models
 import torchvision.transforms as transforms
 import pytorch_lightning as pl
-from thunder.core import Thunder
+from brontes.core import Brontes
 
 # logging setup
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
@@ -76,7 +76,7 @@ optimizer = torch.optim.Adam(
 
 # Thunder Model is initialized with base_model, optimizer, loss, data_loaders
 # Optionally a dict of metrics functions and a batch_fn applied to every batch
-thunder_model = Thunder(
+thunder_model = Brontes(
     model=base_model,
     loss=torch.nn.NLLLoss(),
     data_loaders=dataset_loaders,
