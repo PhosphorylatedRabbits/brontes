@@ -2,7 +2,7 @@
 
 Brontes is your helping cyclops for your pytorch models training.
 It is based on [pytorch_lightning](https://github.com/williamFalcon/pytorch-lightning)
-It comes with an example script in `example/mnist.py` that you can adapt for your needs.
+and comes with an example script in `example/mnist.py` that you can adapt for your needs.
 
 ## Just do this
 
