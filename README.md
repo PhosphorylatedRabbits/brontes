@@ -2,8 +2,9 @@
 
 Thunder simplifies the way you train your pytorch models.
 It is based on [pytorch_lightning](https://github.com/williamFalcon/pytorch-lightning)
-
 It comes with an example script in `bin/training_script.py` that you can adapt for your needs.
+
+## Just do this
 Define your dataset_loaders as a dictionary: use `train`, `val` and optionally a `test` split:
 ```python
 dataset_loaders = {
