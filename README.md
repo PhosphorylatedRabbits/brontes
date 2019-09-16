@@ -50,7 +50,7 @@ trainer = pl.Trainer(max_nb_epochs=EPOCHS)
 trainer.fit(thunder_model)
 ```
 
-## Coming soon:
+## Coming soon
 Experiment tracking with `mlflow`
 
 ## Development setup suggestion
