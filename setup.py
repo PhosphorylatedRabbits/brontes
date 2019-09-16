@@ -11,10 +11,7 @@ if os.path.exists('README.md'):
 REQUIREMENTS = []
 if os.path.exists('requirements.txt'):
     with open('requirements.txt') as fp:
-        REQUIREMENTS = [
-            line.strip()
-            for line in fp
-        ]
+        REQUIREMENTS = [line.strip() for line in fp]
 
 setup(
     name='thunder',
@@ -22,8 +19,9 @@ setup(
     description='Thunder a package for easy training of pytorch models.',
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
-    author='Antonio Foncubierta Rodriguez',
-    author_email='antonio.foncubierta@gmail.com',
+    author='Joris Cadow, Antonio Foncubierta Rodriguez, Matteo Manica',
+    author_email=
+    'joriscadow@gmail.com, antonio.foncubierta@gmail.com, drugilsberg@gmail.com',
     url='https://github.com/afoncubierta/thunder',
     license='MIT',
     install_requires=REQUIREMENTS,
@@ -37,5 +35,4 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules'
     ],
     packages=find_packages(),
-    scripts=['bin/training_script.py']
 )
