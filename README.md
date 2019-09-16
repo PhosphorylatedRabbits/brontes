@@ -5,7 +5,7 @@ It is based on [pytorch_lightning](https://github.com/williamFalcon/pytorch-ligh
 
 It comes with an example script in `bin/training_script.py` that you can adapt for your needs.
 Define your dataset_loaders as a dictionary: use `train`, `val` and optionally a `test` split:
-```
+```python
 dataset_loaders = {
     'train':
         torch.utils.data.DataLoader(
@@ -32,11 +32,11 @@ dataset_loaders = {
 }
 ```
 define your acrhitecture as a `torch.nn.Module` (or pick an existing architecture):
-```
+```python
 base_model = torchvision.models.SqueezeNet(num_classes=10)
 ```
 and use it to wrap your Thunder:
-```
+```python
 thunder_model = Thunder(
     model=base_model,
     loss=torch.nn.NLLLoss(),
@@ -45,7 +45,7 @@ thunder_model = Thunder(
 )
 ```
 and finally train the model using `pytorch_lighning`
-```
+```python
 trainer = pl.Trainer(max_nb_epochs=EPOCHS)
 trainer.fit(thunder_model)
 ```
