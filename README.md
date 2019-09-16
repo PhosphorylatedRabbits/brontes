@@ -1,6 +1,6 @@
-# thunder
+# Brontes
 
-Thunder simplifies the way you train your pytorch models.
+Brontes is your helping cyclops for your pytorch models training.
 It is based on [pytorch_lightning](https://github.com/williamFalcon/pytorch-lightning)
 It comes with an example script in `example/mnist.py` that you can adapt for your needs.
 
@@ -44,7 +44,7 @@ base_model = torchvision.models.SqueezeNet(num_classes=10)
 and use it to wrap your Thunder:
 
 ```python
-thunder_model = Thunder(
+thunder_model = Brontes(
     model=base_model,
     loss=torch.nn.NLLLoss(),
     data_loaders=dataset_loaders,
