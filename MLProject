@@ -11,5 +11,5 @@ entry_points:
       data_path: {type: path, default: "data/"}
       batch_size: {type: int, default: 25}
       epochs: {type: int, default: 5}
-      learning_rate: {type: float, default: 0.1}
+      learning_rate: {type: float, default: 1e-5}
     command: "python3 example/mnist.py -d {data_path} -b {batch_size} -l {learning_rate} --epochs {epochs}"
