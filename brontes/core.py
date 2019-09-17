@@ -1,7 +1,7 @@
 """Brontes training utilities."""
 import torch
 import pytorch_lightning as pl
-from .tracker import Tracker
+from .tracker import TRACKER_FACTORY
 
 
 class Brontes(pl.LightningModule):
@@ -18,7 +18,8 @@ class Brontes(pl.LightningModule):
         optimizers,
         metrics={},
         batch_fn=None,
-        training_log_interval=100
+        training_log_interval=100,
+        tracker_type='logging'
     ):
         """
         Initialize a thuhnder instance.
@@ -35,12 +36,17 @@ class Brontes(pl.LightningModule):
                 Defaults to None, the identity.
             training_log_interval (int): number of training steps for logging.
                 Defaults to 100.
+            tracker_type (str): type of tracker.
+                Defaults to 'logging'.
+                Check valid values by TRACKER_FACTORY.keys().
         """
         super(Brontes, self).__init__()
         self.model = model
         self.loss = loss
         self.data_loaders = data_loaders
-        self.tracker = Tracker()
+        self.tracker = TRACKER_FACTORY.get(
+            tracker_type, TRACKER_FACTORY['logging']
+        )()
         # make sure we have the needed data loaders.
         if not ('train' in self.data_loaders and 'val' in self.data_loaders):
             raise RuntimeError(
