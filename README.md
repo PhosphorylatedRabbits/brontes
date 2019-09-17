@@ -61,9 +61,7 @@ trainer = pl.Trainer(max_nb_epochs=EPOCHS)
 trainer.fit(brontes_model)
 ```
 
-## Coming soon
 
-Experiment tracking with `mlflow`
 
 ## Development setup suggestion
 
