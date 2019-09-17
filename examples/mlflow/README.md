@@ -6,7 +6,7 @@ root of the repo.
 a description of the conda environment required
 
 ```sh
-mlflow run ./ -P batch_size=40 learning_rate=0.001
+mlflow run ./ -P batch_size=40 -P learning_rate=0.001
 
 ```
 
