@@ -10,16 +10,65 @@ import torchvision.transforms as transforms
 import pytorch_lightning as pl
 from brontes import Brontes
 
+import mlflow
+
 # logging setup
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 logger = logging.getLogger('MNIST training')
 
 # Configuration parameters
-DATA_PATH = 'data/'
-BATCH_SIZE = 25
-EPOCHS = 10
-NUMBER_OF_WORKERS = 1
-LEARNING_RATE = 1e-5
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    '-d', '--data_path', type=str,
+    help='path to the data.', default='data/',
+    required=False
+)
+
+parser.add_argument(
+    '-p', '--number_of_workers', type=int,
+    help='number of workers.', default=1,
+    required=False
+)
+parser.add_argument(
+    '-n', '--model_name', type=int,
+    help='model name.', default=None,
+    required=False
+)
+
+parser.add_argument(
+    '-s', '--seed', type=int,
+    help='seed for reproducible results.', default=42,
+    required=False
+)
+
+parser.add_argument(
+    '-b', '--batch_size', type=int,
+    help='batch size.', default=25,
+    required=False
+)
+
+parser.add_argument(
+    '--epochs', type=int,
+    help='epochs.', default=5,
+    required=False
+)
+
+parser.add_argument(
+    '-l', '--learning_rate', type=float,
+    help='learning rate.', default=1e-5,
+    required=False
+)
+
+arguments = parser.parse_args()
+DATA_PATH = arguments.data_path
+NUMBER_OF_WORKERS = arguments.number_of_workers
+MODEL_NAME = arguments.model_name
+SEED = arguments.seed
+BATCH_SIZE = arguments.batch_size
+EPOCHS = arguments.epochs
+LEARNING_RATE = arguments.learning_rate
+
+
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
@@ -75,14 +124,16 @@ def main():
         weight_decay=1e-5  # standard value
     )
 
-    # Thunder Model is initialized with base_model, optimizer, loss, data_loaders
+    # Brontes Model is initialized with base_model, optimizer, loss, data_loaders
     # Optionally a dict of metrics functions and a batch_fn applied to every batch
     brontes_model = Brontes(
         model=base_model,
         loss=torch.nn.NLLLoss(),
         data_loaders=dataset_loaders,
-        optimizers=optimizer
+        optimizers=optimizer,
+        training_log_interval=10
     )
+    
 
     # Finally train the model
     trainer = pl.Trainer(max_nb_epochs=EPOCHS)

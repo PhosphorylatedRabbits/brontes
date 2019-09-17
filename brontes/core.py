@@ -11,9 +11,14 @@ class Brontes(pl.LightningModule):
     """
 
     def __init__(
-        self, model, loss,
-        data_loaders, optimizers,
-        metrics={}, batch_fn=None
+        self,
+        model,
+        loss,
+        data_loaders,
+        optimizers,
+        metrics={},
+        batch_fn=None,
+        training_log_interval=100
     ):
         """
         Initialize a thuhnder instance.
@@ -28,6 +33,8 @@ class Brontes(pl.LightningModule):
                 Defaults to {}.
             batch_fn (function): a function to preprocess the batch.
                 Defaults to None, the identity.
+            training_log_interval (int): number of training steps for logging.
+                Defaults to 100.
         """
         super(Brontes, self).__init__()
         self.model = model
@@ -35,10 +42,7 @@ class Brontes(pl.LightningModule):
         self.data_loaders = data_loaders
         self.tracker = Tracker()
         # make sure we have the needed data loaders.
-        if not (
-            'train' in self.data_loaders and
-            'val' in self.data_loaders
-        ):
+        if not ('train' in self.data_loaders and 'val' in self.data_loaders):
             raise RuntimeError(
                 'Argument "data_loaders" must contain '
                 'both "train" and "val" keys.'
@@ -49,6 +53,10 @@ class Brontes(pl.LightningModule):
             self.batch_fn = batch_fn
         else:
             self.batch_fn = lambda x: x
+        self.training_log_interval = training_log_interval
+        self.training_step_count = 0
+        self.validation_step_count = 0
+        self.validation_end_count = 0
 
     def forward(self, x):
         """
@@ -78,8 +86,12 @@ class Brontes(pl.LightningModule):
         training_dict = {}
         training_dict['loss'] = self.loss(y_hat, y)
         for name, metric in self.metrics.items():
-            training_dict[name] = metric(y_hat, y)     
-        self.tracker.log_tensor_dict(training_dict)
+            training_dict[name] = metric(y_hat, y)
+        if batch_nb % self.training_log_interval == 0:
+            self.tracker.log_tensor_dict(
+                training_dict, step=self.training_step_count
+            )
+        self.training_step_count += 1
         return training_dict
 
     def validation_step(self, batch, batch_nb):
@@ -97,7 +109,10 @@ class Brontes(pl.LightningModule):
             f'val_{name}': value
             for name, value in self.training_step(batch, batch_nb).items()
         }
-        self.tracker.log_tensor_dict(validation_dict)
+        self.tracker.log_tensor_dict(
+            validation_dict, step=self.validation_step_count
+        )
+        self.validation_step_count += 1
         return validation_dict
 
     def validation_end(self, outputs):
@@ -116,7 +131,10 @@ class Brontes(pl.LightningModule):
             f'avg_{name}': torch.stack([x[name] for x in outputs]).mean()
             for name in names
         }
-        self.tracker.log_tensor_dict(validation_end_dict)
+        self.tracker.log_tensor_dict(
+            validation_end_dict, step=self.validation_end_count
+        )
+        self.validation_step_count += 1
         return validation_end_dict
 
     def configure_optimizers(self):

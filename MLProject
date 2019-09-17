@@ -1,0 +1,15 @@
+name: Brontes mlflow Project
+
+# conda_env: my_env.yaml
+# Can have a docker_env instead of a conda_env, e.g.
+# docker_env:
+#    image:  mlflow-docker-example
+
+entry_points:
+  main:
+    parameters:
+      data_path: {type: path, default: "data/"}
+      batch_size: {type: int, default: 25}
+      epochs: {type: int, default: 5}
+      learning_rate: {type: float, default: 0.1}
+    command: "python3 examples/mnist.py -d {data_path} -b {batch_size} -l {learning_rate} --epochs {epochs}"
