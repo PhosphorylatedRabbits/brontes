@@ -41,10 +41,10 @@ define your acrhitecture as a `torch.nn.Module` (or pick an existing architectur
 base_model = torchvision.models.SqueezeNet(num_classes=10)
 ```
 
-and use it to wrap your Thunder:
+and use it to wrap your Brontes:
 
 ```python
-thunder_model = Brontes(
+brontes_model = Brontes(
     model=base_model,
     loss=torch.nn.NLLLoss(),
     data_loaders=dataset_loaders,
@@ -56,7 +56,7 @@ and finally train the model using `pytorch_lighning`
 
 ```python
 trainer = pl.Trainer(max_nb_epochs=EPOCHS)
-trainer.fit(thunder_model)
+trainer.fit(brontes_model)
 ```
 
 ## Coming soon

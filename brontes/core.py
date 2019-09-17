@@ -1,6 +1,7 @@
 """Brontes training utilities."""
 import torch
 import pytorch_lightning as pl
+from .tracker import Tracker
 
 
 class Brontes(pl.LightningModule):
@@ -32,6 +33,7 @@ class Brontes(pl.LightningModule):
         self.model = model
         self.loss = loss
         self.data_loaders = data_loaders
+        self.tracker = Tracker()
         # make sure we have the needed data loaders.
         if not (
             'train' in self.data_loaders and
@@ -73,11 +75,12 @@ class Brontes(pl.LightningModule):
         """
         x, y = self.batch_fn(batch)
         y_hat = self.forward(x)
-        results = {}
-        results['loss'] = self.loss(y_hat, y)
+        training_dict = {}
+        training_dict['loss'] = self.loss(y_hat, y)
         for name, metric in self.metrics.items():
-            results[name] = metric(y_hat, y)
-        return results
+            training_dict[name] = metric(y_hat, y)     
+        self.tracker.log_tensor_dict(training_dict)
+        return training_dict
 
     def validation_step(self, batch, batch_nb):
         """
@@ -90,10 +93,12 @@ class Brontes(pl.LightningModule):
         Returns:
             a dict containing the loss and, optionally, additional metrics.
         """
-        return {
+        validation_dict = {
             f'val_{name}': value
             for name, value in self.training_step(batch, batch_nb).items()
         }
+        self.tracker.log_tensor_dict(validation_dict)
+        return validation_dict
 
     def validation_end(self, outputs):
         """
@@ -107,10 +112,12 @@ class Brontes(pl.LightningModule):
             averaged over the results.
         """
         names = ['val_loss'] + [f'val_{name}' for name in self.metrics.keys()]
-        return {
+        validation_end_dict = {
             f'avg_{name}': torch.stack([x[name] for x in outputs]).mean()
             for name in names
         }
+        self.tracker.log_tensor_dict(validation_end_dict)
+        return validation_end_dict
 
     def configure_optimizers(self):
         """
