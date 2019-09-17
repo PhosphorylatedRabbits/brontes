@@ -133,7 +133,8 @@ def main():
         loss=torch.nn.NLLLoss(),
         data_loaders=dataset_loaders,
         optimizers=optimizer,
-        training_log_interval=10
+        training_log_interval=10,
+        tracker_type='mlflow'
     )
     
 
