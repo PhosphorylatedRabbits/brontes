@@ -3,6 +3,7 @@
 import logging
 import sys
 import argparse
+import tempfile
 
 import torch
 import numpy as np
@@ -130,7 +131,7 @@ def main(arguments):
     trainer.fit(brontes_model)
 
     # save the model
-    saved_model = f'/tmp/{MODEL_NAME}.pt'
+    saved_model = f'{tempfile.mkdtemp()}/{MODEL_NAME}.pt'
     torch.save(brontes_model.model, saved_model)
 
 
