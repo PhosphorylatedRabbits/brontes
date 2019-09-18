@@ -36,9 +36,7 @@ class Brontes(pl.LightningModule):
                 Defaults to None, the identity.
             training_log_interval (int): number of training steps for logging.
                 Defaults to 100.
-            tracker_type (str): type of tracker.
-                Defaults to 'logging'.
-                Check valid values by TRACKER_FACTORY.keys().
+            tracker_type (str): type of tracker. Defaults to 'logging'.
         """
         super(Brontes, self).__init__()
         self.model = model

@@ -16,13 +16,17 @@ if os.path.exists('requirements.txt'):
 setup(
     name='brontes',
     version='0.0.1',
-    description=
-    'Brontes is your helping cyclops for your pytorch models training.',
+    description=(
+        'Brontes is your helping cyclops for your pytorch models training.'
+    ),
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
     author='Joris Cadow, Antonio Foncubierta Rodriguez, Matteo Manica',
-    author_email=
-    'joriscadow@gmail.com, antonio.foncubierta@gmail.com, drugilsberg@gmail.com',
+    author_email=(
+        'joriscadow@gmail.com, '
+        'antonio.foncubierta@gmail.com, '
+        'drugilsberg@gmail.com'
+    ),
     url='https://github.com/afoncubierta/brontes',
     license='MIT',
     install_requires=REQUIREMENTS,

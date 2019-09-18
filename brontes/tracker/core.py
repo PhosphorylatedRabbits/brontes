@@ -1,12 +1,24 @@
 """Tracker core."""
 import logging
+
 logger = logging.getLogger('brontes::tracker::core')
 
 
 class Tracker:
+    """Tracker class."""
 
     def log_tensor_dict(self, dictionary, step):
-        logger.debug(
-            {key: value.item()
-             for key, value in dictionary.items()}
-        )
+        """
+        Log a dictionary containing tensors using the logging
+        package at level debug.
+
+        Args:
+            dictionary (dict): a dictionary of torch.tensors.
+            setp (int): integer step.
+        """
+        log_dictionary = {
+            key: value.item()
+            for key, value in dictionary.items()
+        }
+        log_dictionary['step'] = step
+        logger.debug(log_dictionary)
