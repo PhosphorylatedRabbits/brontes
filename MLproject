@@ -5,8 +5,7 @@ conda_env: conda.yml
 entry_points:
   main:
     parameters:
-      data_path: {type: path, default: "data/"}
       batch_size: {type: int, default: 25}
       epochs: {type: int, default: 5}
       learning_rate: {type: float, default: 1e-5}
-    command: "python3 examples/mlflow/run.py -d {data_path} -b {batch_size} -l {learning_rate} --epochs {epochs}"
+    command: "python3 examples/mlflow/run.py -b {batch_size} -l {learning_rate} --epochs {epochs}"

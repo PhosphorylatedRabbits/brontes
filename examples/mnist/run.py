@@ -4,6 +4,7 @@ import logging
 import sys
 import argparse
 import tempfile
+import os
 
 import torch
 import numpy as np
@@ -72,6 +73,9 @@ def main(arguments):
     BATCH_SIZE = arguments.batch_size
     EPOCHS = arguments.epochs
     LEARNING_RATE = arguments.learning_rate
+
+    # make sure the data folder exists
+    os.makedirs(DATA_PATH, exist_ok=True)
 
     # set the seed
     np.random.seed(SEED)
