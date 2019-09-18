@@ -71,7 +71,6 @@ def main(arguments):
     BATCH_SIZE = arguments.batch_size
     EPOCHS = arguments.epochs
     LEARNING_RATE = arguments.learning_rate
-    DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     # set the seed
     np.random.seed(SEED)
