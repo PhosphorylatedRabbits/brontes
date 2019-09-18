@@ -27,7 +27,7 @@ setup(
         'antonio.foncubierta@gmail.com, '
         'drugilsberg@gmail.com'
     ),
-    url='https://github.com/afoncubierta/brontes',
+    url='https://github.com/PhosphorylatedRabbits/brontes',
     license='MIT',
     install_requires=REQUIREMENTS,
     classifiers=[
