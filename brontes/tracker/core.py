@@ -4,7 +4,7 @@ import logging
 logger = logging.getLogger('brontes::tracker::core')
 
 
-def log_tensor_dict(dictionary, step):
+def default_log_tensor_dict(dictionary, step):
     """
     Log a dictionary containing tensors using the logging
     package at level debug.
@@ -23,7 +23,7 @@ def log_tensor_dict(dictionary, step):
 
 class Tracker:
     """Tracker class."""
-    log_fn = log_tensor_dict
+    log_fn = default_log_tensor_dict
 
     def log_tensor_dict(self, dictionary, step):
         """
