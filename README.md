@@ -40,7 +40,7 @@ dataset_loaders = {
 define your acrhitecture as a `torch.nn.Module` (or pick an existing architecture):
 
 ```python
-base_model = torchvision.models.SqueezeNet(num_classes=10)
+base_model = brontes.examples.Net()
 ```
 
 and wrap it with Brontes:
@@ -73,10 +73,4 @@ Activate it:
 
 ```sh
 conda activate brontes
-```
-
-Install the module:
-
-```sh
-pip install -e .
 ```

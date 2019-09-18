@@ -7,10 +7,10 @@ import torch
 import mlflow
 import numpy as np
 import torchvision.datasets as datasets
-import torchvision.models as models
 import torchvision.transforms as transforms
 import pytorch_lightning as pl
 
+from brontes.examples import Net
 from brontes import Brontes
 
 # logging setup
@@ -46,7 +46,7 @@ parser.add_argument(
 )
 parser.add_argument(
     '--epochs', type=int,
-    help='epochs.', default=5,
+    help='epochs.', default=2,
     required=False
 )
 parser.add_argument(
@@ -79,6 +79,7 @@ def main(arguments):
     torch.cuda.manual_seed_all(SEED)
 
     # data loaders for the MNIST dataset
+    # data loaders for the MNIST dataset
     dataset_loaders = {
         'train':
             torch.utils.data.DataLoader(
@@ -86,13 +87,7 @@ def main(arguments):
                     root=DATA_PATH,
                     train=True,
                     download=True,
-                    transform=transforms.Compose(
-                        [
-                            transforms.Resize((224, 224)),
-                            transforms.ToTensor(),
-                            transforms.Lambda(lambda x: x.repeat(3, 1, 1))
-                        ]
-                    )
+                    transform=transforms.ToTensor()
                 ),
                 batch_size=BATCH_SIZE,
                 shuffle=True,
@@ -104,13 +99,7 @@ def main(arguments):
                     root=DATA_PATH,
                     train=False,
                     download=True,
-                    transform=transforms.Compose(
-                        [
-                            transforms.Resize((224, 224)),
-                            transforms.ToTensor(),
-                            transforms.Lambda(lambda x: x.repeat(3, 1, 1))
-                        ]
-                    )
+                    transform=transforms.ToTensor()
                 ),
                 batch_size=BATCH_SIZE,
                 shuffle=True,
@@ -119,7 +108,7 @@ def main(arguments):
     }
 
     # definition of base model
-    base_model = models.SqueezeNet(version=1.1, num_classes=10).to(DEVICE)
+    base_model = Net().to(DEVICE)
 
     optimizer = torch.optim.Adam(
         base_model.parameters(),

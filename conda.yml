@@ -8,3 +8,6 @@ dependencies:
     - pytorch-lightning>=0.4.8
     - mlflow>=1.2.0
     - tqdm>=4.35.0
+    - flake8>=3.7.8
+    - yapf>=0.28.0
+    - -e . # install brontes in editable mode

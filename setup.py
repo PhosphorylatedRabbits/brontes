@@ -17,7 +17,7 @@ setup(
     name='brontes',
     version='0.0.1',
     description=(
-        'Brontes is your helping cyclops for your pytorch models training.'
+        'Brontes is your helping cyclops for pytorch models training.'
     ),
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
