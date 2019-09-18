@@ -107,7 +107,7 @@ def main(arguments):
     }
 
     # definition of base model
-    base_model = Net().to(DEVICE)
+    base_model = Net()
 
     optimizer = torch.optim.Adam(
         base_model.parameters(),
