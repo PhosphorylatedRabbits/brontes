@@ -2,6 +2,7 @@
 [![codecov](https://codecov.io/gh/PhosphorylatedRabbits/brontes/branch/master/graph/badge.svg)](https://codecov.io/gh/PhosphorylatedRabbits/brontes)
 [![Updates](https://pyup.io/repos/github/PhosphorylatedRabbits/brontes/shield.svg)](https://pyup.io/repos/github/PhosphorylatedRabbits/brontes)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![PyPI version](https://badge.fury.io/py/brontes.svg)](https://badge.fury.io/py/brontes)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/6dc4922e69954e96820dae93ed704736)](https://www.codacy.com/manual/drugilsberg/brontes?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=PhosphorylatedRabbits/brontes&amp;utm_campaign=Badge_Grade)
 
 # Brontes
