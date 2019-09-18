@@ -2,6 +2,7 @@
 import logging
 import sys
 import argparse
+import tempfile
 
 import torch
 import mlflow
@@ -71,7 +72,7 @@ def main(arguments):
     BATCH_SIZE = arguments.batch_size
     EPOCHS = arguments.epochs
     LEARNING_RATE = arguments.learning_rate
-    
+
     # set the seed
     np.random.seed(SEED)
     torch.manual_seed(SEED)
@@ -142,7 +143,7 @@ def main(arguments):
     trainer.fit(brontes_model)
 
     # save the model to tmp and log it as an mlflow artifact
-    saved_model = f'/tmp/{MODEL_NAME}.pt'
+    saved_model = f'{tempfile.mkdtemp()}/{MODEL_NAME}.pt'
     torch.save(brontes_model.model, saved_model)
     mlflow.log_artifact(saved_model)
 

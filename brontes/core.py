@@ -16,7 +16,7 @@ class Brontes(pl.LightningModule):
         loss,
         data_loaders,
         optimizers,
-        metrics={},
+        metrics=None,
         batch_fn=None,
         training_log_interval=100,
         tracker_type='logging'
@@ -31,7 +31,7 @@ class Brontes(pl.LightningModule):
                 It has to contain 'train', 'val' and optionally a 'test'.
             optimizers (list of/or torch.optim.Optimizer): optimizer/s adopted.
             metrics (dict): additional metrics to compute apart from the loss.
-                Defaults to {}.
+                Defaults to None.
             batch_fn (function): a function to preprocess the batch.
                 Defaults to None, the identity.
             training_log_interval (int): number of training steps for logging.
@@ -52,7 +52,8 @@ class Brontes(pl.LightningModule):
                 'both "train" and "val" keys.'
             )
         self.optimizers = optimizers
-        self.metrics = metrics
+        if metrics is None:
+            self.metrics = {}
         if batch_fn is not None:
             self.batch_fn = batch_fn
         else:
