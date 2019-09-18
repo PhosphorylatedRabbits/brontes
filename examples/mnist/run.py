@@ -1,78 +1,83 @@
-""" Training Script with Thunder Tools """
+"""Training script with brontes."""
 # imports
 import logging
 import sys
 import argparse
 
 import torch
+import numpy as np
 import torchvision.datasets as datasets
-import torchvision.models as models
 import torchvision.transforms as transforms
 import pytorch_lightning as pl
-from brontes import Brontes
 
+from brontes.examples import Net
+from brontes import Brontes
 
 # logging setup
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
-logger = logging.getLogger('MNIST training')
+logger = logging.getLogger('mnist-training')
 
-# Configuration parameters
+# # configure argument parser
 parser = argparse.ArgumentParser()
 parser.add_argument(
     '-d', '--data_path', type=str,
     help='path to the data.', default='data/',
     required=False
 )
-
 parser.add_argument(
     '-p', '--number_of_workers', type=int,
     help='number of workers.', default=1,
     required=False
 )
 parser.add_argument(
-    '-n', '--model_name', type=int,
-    help='model name.', default=None,
+    '-n', '--model_name', type=str,
+    help='model name.', default='model',
     required=False
 )
-
 parser.add_argument(
     '-s', '--seed', type=int,
     help='seed for reproducible results.', default=42,
     required=False
 )
-
 parser.add_argument(
     '-b', '--batch_size', type=int,
     help='batch size.', default=25,
     required=False
 )
-
 parser.add_argument(
     '--epochs', type=int,
-    help='epochs.', default=5,
+    help='epochs.', default=2,
     required=False
 )
-
 parser.add_argument(
     '-l', '--learning_rate', type=float,
     help='learning rate.', default=1e-5,
     required=False
 )
 
-arguments = parser.parse_args()
-DATA_PATH = arguments.data_path
-NUMBER_OF_WORKERS = arguments.number_of_workers
-MODEL_NAME = arguments.model_name
-SEED = arguments.seed
-BATCH_SIZE = arguments.batch_size
-EPOCHS = arguments.epochs
-LEARNING_RATE = arguments.learning_rate
 
+def main(arguments):
+    """
+    Train SqueezeNet with brontes.
 
-DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    Args:
+        arguments (Namespace): parsed arguments.
+    """
+    # create aliases
+    DATA_PATH = arguments.data_path
+    NUMBER_OF_WORKERS = arguments.number_of_workers
+    MODEL_NAME = arguments.model_name
+    SEED = arguments.seed
+    BATCH_SIZE = arguments.batch_size
+    EPOCHS = arguments.epochs
+    LEARNING_RATE = arguments.learning_rate
+    DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
+    # set the seed
+    np.random.seed(SEED)
+    torch.manual_seed(SEED)
+    torch.cuda.manual_seed_all(SEED)
 
-def main():
     # data loaders for the MNIST dataset
     dataset_loaders = {
         'train':
@@ -81,13 +86,7 @@ def main():
                     root=DATA_PATH,
                     train=True,
                     download=True,
-                    transform=transforms.Compose(
-                        [
-                            transforms.Resize((224, 224)),
-                            transforms.ToTensor(),
-                            transforms.Lambda(lambda x: x.repeat(3, 1, 1))
-                        ]
-                    )
+                    transform=transforms.ToTensor()
                 ),
                 batch_size=BATCH_SIZE,
                 shuffle=True,
@@ -99,13 +98,7 @@ def main():
                     root=DATA_PATH,
                     train=False,
                     download=True,
-                    transform=transforms.Compose(
-                        [
-                            transforms.Resize((224, 224)),
-                            transforms.ToTensor(),
-                            transforms.Lambda(lambda x: x.repeat(3, 1, 1))
-                        ]
-                    )
+                    transform=transforms.ToTensor()
                 ),
                 batch_size=BATCH_SIZE,
                 shuffle=True,
@@ -113,8 +106,8 @@ def main():
             )
     }
 
-    # Definition of Base Model
-    base_model = models.SqueezeNet(version=1.1, num_classes=10)
+    # definition of base model
+    base_model = Net().to(DEVICE)
 
     optimizer = torch.optim.Adam(
         base_model.parameters(),
@@ -122,8 +115,9 @@ def main():
         weight_decay=1e-5  # standard value
     )
 
-    # Brontes Model is initialized with base_model, optimizer, loss, data_loaders
-    # Optionally a dict of metrics functions and a batch_fn applied to every batch
+    # brontes model is initialized with base_model, optimizer, loss,
+    # data_loaders. Optionally a dict of metrics functions and a
+    # batch_fn applied to every batch can be provided.
     brontes_model = Brontes(
         model=base_model,
         loss=torch.nn.NLLLoss(),
@@ -131,12 +125,15 @@ def main():
         optimizers=optimizer,
         training_log_interval=10
     )
-    
 
-    # Finally train the model
+    # finally, train the model
     trainer = pl.Trainer(max_nb_epochs=EPOCHS)
     trainer.fit(brontes_model)
 
+    # save the model
+    saved_model = f'/tmp/{MODEL_NAME}.pt'
+    torch.save(brontes_model.model, saved_model)
+
 
 if __name__ == "__main__":
-    main()
+    main(arguments=parser.parse_args())

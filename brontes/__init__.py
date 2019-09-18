@@ -1,5 +1,5 @@
-"""Content of the thunder module"""
-from .core import Brontes
+"""Initialize brontes module"""
+from .core import Brontes  # noqa
 
 name = 'brontes'
 __version__ = '0.0.1'

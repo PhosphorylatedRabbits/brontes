@@ -1,10 +1,10 @@
 # Brontes
 
-Brontes is your helping cyclops for your pytorch models training.
+Brontes is your helping cyclops for pytorch models training.
 It is based on [pytorch_lightning](https://github.com/williamFalcon/pytorch-lightning)
 and comes with an example script in [examples/mnist/run.py](examples/mnist/run.py) that you can adapt for your needs.
 
-Additionally, there is an example in [examples/mlflow](examples/mlflow) which describes how to use mlflow with Brontes. 
+Additionally, there is an example in [examples/mlflow](examples/mlflow) which describes how to use mlflow with Brontes.
 
 ## Just do this
 
@@ -40,10 +40,10 @@ dataset_loaders = {
 define your acrhitecture as a `torch.nn.Module` (or pick an existing architecture):
 
 ```python
-base_model = torchvision.models.SqueezeNet(num_classes=10)
+base_model = brontes.examples.Net()
 ```
 
-and use it to wrap your Brontes:
+and wrap it with Brontes:
 
 ```python
 brontes_model = Brontes(
@@ -54,37 +54,23 @@ brontes_model = Brontes(
 )
 ```
 
-and finally train the model using `pytorch_lighning`
+finally train the model using `pytorch_lighning`
 
 ```python
 trainer = pl.Trainer(max_nb_epochs=EPOCHS)
 trainer.fit(brontes_model)
 ```
 
+## Development setup
 
-
-## Development setup suggestion
-
-Create a `venv`:
+Setup the conda environment
 
 ```sh
-python -m venv venv
+conda env create -f conda.yml
 ```
 
 Activate it:
 
 ```sh
-source venv/bin/activate
-```
-
-Install dependencies:
-
-```sh
-pip install -r requirements.txt
-```
-
-Install the package in editable mode:
-
-```sh
-pip install -e .
+conda activate brontes
 ```
