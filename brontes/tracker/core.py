@@ -23,7 +23,6 @@ def default_log_tensor_dict(dictionary, step):
 
 class Tracker:
     """Tracker class."""
-    log_fn = default_log_tensor_dict
 
     def log_tensor_dict(self, dictionary, step):
         """
@@ -34,4 +33,4 @@ class Tracker:
             dictionary (dict): a dictionary of torch.tensors.
             setp (int): integer step.
         """
-        self.log_fn(dictionary, step)
+        default_log_tensor_dict(dictionary, step)
