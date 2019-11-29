@@ -95,11 +95,11 @@ class Brontes(pl.LightningModule):
         training_dict['loss'] = self.loss(y_hat, y)
         for name, metric in self.metrics.items():
             metrics_dict[name] = metric(y_hat, y)
+        training_dict['log'] = metrics_dict
         if batch_nb % self.training_log_interval == 0:
             self.tracker.log_tensor_dict(
                 training_dict, step=self.training_step_count
             )
-        training_dict['log'] = metrics_dict
         self.training_step_count += 1
         return training_dict
 
