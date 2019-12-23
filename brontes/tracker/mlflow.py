@@ -19,7 +19,7 @@ class MLflowTracker(Tracker):
             setp (int): integer step.
         """
         mlflow.log_metrics(
-            {key: value.item()
+            {key: value
                 for key, value in dictionary.items()},
             step=step
         )

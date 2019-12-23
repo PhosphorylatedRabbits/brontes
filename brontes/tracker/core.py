@@ -14,7 +14,7 @@ def default_log_tensor_dict(dictionary, step):
         setp (int): integer step.
     """
     log_dictionary = {
-        key: value.item()
+        key: value#.item()
         for key, value in dictionary.items()
     }
     log_dictionary['step'] = step

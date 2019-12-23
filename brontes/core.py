@@ -16,6 +16,7 @@ class Brontes(pl.LightningModule):
         loss,
         data_loaders,
         optimizers,
+        scheduler=None,
         metrics=None,
         batch_fn=None,
         training_log_interval=100,
@@ -52,6 +53,7 @@ class Brontes(pl.LightningModule):
                 'both "train" and "val" keys.'
             )
         self.optimizers = optimizers
+        self.scheduler = scheduler
         if metrics is None:
             self.metrics = {}
         else:
@@ -64,6 +66,9 @@ class Brontes(pl.LightningModule):
         self.training_step_count = 0
         self.validation_step_count = 0
         self.validation_end_count = 0
+
+        self.test_step_count = 0
+        self.test_end_count = 0
 
     def forward(self, x):
         """
@@ -153,6 +158,56 @@ class Brontes(pl.LightningModule):
         self.validation_step_count += 1
         return validation_end_dict
 
+    def test_step(self, batch, batch_nb):
+        """
+        Validation step.
+
+        Args:
+            batch (tuple): a tuple containing x and y.
+            batch_nb (int): integer representing the batch number.
+
+        Returns:
+            a dict containing the loss and, optionally, additional metrics.
+        """
+        t_step = self.training_step(batch, batch_nb)
+        if self.metrics is None:
+            test_dict = {
+                f'test_{name}': value
+                for name, value in t_step.items()
+            }
+        else:
+            test_dict = {}
+            test_dict['test_loss'] = t_step['loss']
+            for name, metric in t_step['log'].items():
+                test_dict[f'test_{name}'] = metric
+        self.tracker.log_tensor_dict(
+            test_dict, step=self.test_step_count
+        )
+        self.test_step_count += 1
+        return test_dict
+
+    def test_end(self, outputs):
+        """
+        Validation end.
+
+        Args:
+            outputs (iterable): an iterable containing results.
+
+        Returns:
+            a dict containing the loss and, optionally, additional metrics
+            averaged over the results.
+        """
+        names = ['test_loss'] + [f'test_{name}' for name in self.metrics.keys()]
+        test_end_dict = {
+            f'avg_{name}': torch.stack([x[name] for x in outputs]).mean()
+            for name in names
+        }
+        self.tracker.log_tensor_dict(
+            test_end_dict, step=self.test_end_count
+        )
+        self.test_step_count += 1
+        return test_end_dict 
+
     def configure_optimizers(self):
         """
         Return the optimizers.
@@ -160,7 +215,10 @@ class Brontes(pl.LightningModule):
         Returns:
             optimizer/s adopted.
         """
-        return self.optimizers
+        if self.scheduler:
+            return [self.optimizers], [self.scheduler]
+        else:
+            return self.optimizers
 
     @pl.data_loader
     def tng_dataloader(self):
