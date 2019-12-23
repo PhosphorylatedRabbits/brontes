@@ -54,6 +54,8 @@ class Brontes(pl.LightningModule):
         self.optimizers = optimizers
         if metrics is None:
             self.metrics = {}
+        else:
+            self.metrics = metrics
         if batch_fn is not None:
             self.batch_fn = batch_fn
         else:
@@ -89,9 +91,11 @@ class Brontes(pl.LightningModule):
         x, y = self.batch_fn(batch)
         y_hat = self.forward(x)
         training_dict = {}
+        metrics_dict = {}
         training_dict['loss'] = self.loss(y_hat, y)
         for name, metric in self.metrics.items():
-            training_dict[name] = metric(y_hat, y)
+            metrics_dict[name] = metric(y_hat, y)
+        training_dict['log'] = metrics_dict
         if batch_nb % self.training_log_interval == 0:
             self.tracker.log_tensor_dict(
                 training_dict, step=self.training_step_count
@@ -110,10 +114,17 @@ class Brontes(pl.LightningModule):
         Returns:
             a dict containing the loss and, optionally, additional metrics.
         """
-        validation_dict = {
-            f'val_{name}': value
-            for name, value in self.training_step(batch, batch_nb).items()
-        }
+        t_step = self.training_step(batch, batch_nb)
+        if self.metrics is None:
+            validation_dict = {
+                f'val_{name}': value
+                for name, value in t_step.items()
+            }
+        else:
+            validation_dict = {}
+            validation_dict['val_loss'] = t_step['loss']
+            for name, metric in t_step['log'].items():
+                validation_dict[f'val_{name}'] = metric
         self.tracker.log_tensor_dict(
             validation_dict, step=self.validation_step_count
         )
