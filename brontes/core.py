@@ -22,7 +22,7 @@ class Brontes(pl.LightningModule):
         tracker_type='logging'
     ):
         """
-        Initialize a thuhnder instance.
+        Initialize a thunder instance.
 
         Args:
             model (torch.nn.Module): a model object.
@@ -90,12 +90,11 @@ class Brontes(pl.LightningModule):
         """
         x, y = self.batch_fn(batch)
         y_hat = self.forward(x)
-        training_dict = {}
-        metrics_dict = {}
-        training_dict['loss'] = self.loss(y_hat, y)
+        training_dict = {
+            'loss': self.loss(y_hat, y)
+        }
         for name, metric in self.metrics.items():
-            metrics_dict[name] = metric(y_hat, y)
-        training_dict['log'] = metrics_dict
+            training_dict[name] = metric(y_hat, y)
         if batch_nb % self.training_log_interval == 0:
             self.tracker.log_tensor_dict(
                 training_dict, step=self.training_step_count
@@ -122,8 +121,7 @@ class Brontes(pl.LightningModule):
             }
         else:
             validation_dict = {}
-            validation_dict['val_loss'] = t_step['loss']
-            for name, metric in t_step['log'].items():
+            for name, metric in t_step.items():
                 validation_dict[f'val_{name}'] = metric
         self.tracker.log_tensor_dict(
             validation_dict, step=self.validation_step_count
