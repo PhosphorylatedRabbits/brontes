@@ -26,7 +26,7 @@ class Brontes(pl.LightningModule):
 
         Args:
             model (torch.nn.Module): a model object.
-            loss (torch.nn.Module): a loss object.
+            loss (callable fn): a loss object.
             data_loaders (dict): a dict of torch.utils.data.DataLoader objects.
                 It has to contain 'train', 'val' and optionally a 'test'.
             optimizers (list of/or torch.optim.Optimizer): optimizer/s adopted.
@@ -89,12 +89,12 @@ class Brontes(pl.LightningModule):
             a dict containing the loss and, optionally, additional metrics.
         """
         x, y = self.batch_fn(batch)
-        y_hat = self.forward(x)
+        out = self.forward(x)
         training_dict = {
-            'loss': self.loss(y_hat, y)
+            'loss': self.loss(out, y)
         }
         for name, metric in self.metrics.items():
-            training_dict[name] = metric(y_hat, y)
+            training_dict[name] = metric(out, y)
         if batch_nb % self.training_log_interval == 0:
             self.tracker.log_tensor_dict(
                 training_dict, step=self.training_step_count
