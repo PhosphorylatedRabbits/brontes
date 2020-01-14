@@ -16,7 +16,7 @@ from brontes.examples import Net
 from brontes import Brontes
 
 # logging setup
-logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger('mnist-training')
 
 # # configure argument parser
@@ -43,7 +43,7 @@ parser.add_argument(
 )
 parser.add_argument(
     '-b', '--batch_size', type=int,
-    help='batch size.', default=25,
+    help='batch size.', default=32,
     required=False
 )
 parser.add_argument(
@@ -53,7 +53,7 @@ parser.add_argument(
 )
 parser.add_argument(
     '-l', '--learning_rate', type=float,
-    help='learning rate.', default=1e-5,
+    help='learning rate.', default=10e-3,
     required=False
 )
 
