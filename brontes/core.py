@@ -19,7 +19,8 @@ class Brontes(pl.LightningModule):
         metrics=None,
         batch_fn=None,
         training_log_interval=100,
-        tracker_type='logging'
+        tracker_type='logging',
+        scheduler=None
     ):
         """
         Initialize a thunder instance.
@@ -52,6 +53,7 @@ class Brontes(pl.LightningModule):
                 'both "train" and "val" keys.'
             )
         self.optimizers = optimizers
+        self.scheduler = scheduler
         if metrics is None:
             self.metrics = {}
         else:
@@ -158,6 +160,9 @@ class Brontes(pl.LightningModule):
         Returns:
             optimizer/s adopted.
         """
+        if self.scheduler:
+            return [self.optimizers], [self.scheduler]
+
         return self.optimizers
 
     @pl.data_loader
